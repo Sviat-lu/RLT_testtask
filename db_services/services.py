@@ -18,7 +18,7 @@ async def get_aggregated_data(
         dt_upto=dt_upto,
         group_type=group_type,
     )
-    query = await get_query(date_format, requested_dates)
+    query = await get_query(date_format, dt_from, dt_upto)
     
     query_data_cursor = coll.aggregate(query)
     query_data = [obj async for obj in query_data_cursor]

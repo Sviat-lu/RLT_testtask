@@ -51,25 +51,23 @@ async def add_null_dates(
 
 async def get_query(
     date_format: str,
-    requested_dates: list,
+    dt_from, 
+    dt_upto,
 ) -> list:
     query = [
-    {
-        '$group': {
-            '_id': { '$dateToString': { 'format': date_format, 'date': '$dt' } },
-            'data': { '$sum': '$value' }
-        }
-    },
-    {
-        '$match': {
-            '_id': { '$in': requested_dates }
-        }
-    },
-    {
-        '$sort': {
-            '_id': 1
-        }
-    }
-]
+        {
+            "$match": {
+                "dt": {"$gte": dt_from,
+                       "$lte": dt_upto}
+                }
+        },
+        {
+            "$group": {
+                "_id": {"$dateToString": {"format": date_format, "date": "$dt"}},
+                "data": {"$sum": "$value"}
+            }
+        },
+        {"$sort": {"_id": 1}}
+    ]
     return query
     
